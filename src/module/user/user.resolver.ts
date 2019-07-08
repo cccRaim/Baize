@@ -4,12 +4,16 @@ import { PubSub } from 'apollo-server-express';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import { UserInput } from './user.input';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 const pubSub = new PubSub();
 
 @Resolver(of => User)
 export class UserResolver {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+  ) {}
 
   @Query(returns => User)
   async user(@Args('id') id: number): Promise<User> {
@@ -20,8 +24,17 @@ export class UserResolver {
     return user;
   }
 
+  @Query(returns => User)
+  async userByUsername(@Args('username') username: string): Promise<User> {
+    const user = await this.userService.findOneByUsername(username);
+    if (!user) {
+      throw new NotFoundException(username);
+    }
+    return user;
+  }
+
   @Mutation(returns => User)
-  async addRecipe(@Args('payload') payload: UserInput): Promise<User> {
+  async create(@Args('payload') payload: UserInput): Promise<User> {
     const user = await this.userService.create(payload);
     pubSub.publish('userAdded', payload);
     return user;

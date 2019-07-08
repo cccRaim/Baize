@@ -9,5 +9,5 @@ export class UserInput {
 
   @Field()
   @Length(8, 255)
-  password6: string;
+  password: string;
 }

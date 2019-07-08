@@ -19,7 +19,15 @@ export class UserService {
     return await this.userRepository.findOne(id);
   }
 
+  async findOneByUsername(username: string): Promise<User> {
+    return await this.userRepository.findOne(username);
+  }
+
   async create(payload: UserInput): Promise<User> {
-    return await this.userRepository.create(payload);
+    const user = new User();
+    user.username = payload.username;
+    user.password = payload.password;
+    await this.userRepository.save(user);
+    return user;
   }
 }
