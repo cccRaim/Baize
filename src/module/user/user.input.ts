@@ -1,8 +1,9 @@
 import { Length, MaxLength } from 'class-validator';
 import { Field, InputType } from 'type-graphql';
+import { User } from './user.entity';
 
 @InputType()
-export class UserCreateInput {
+export class UserCreateInput implements Partial<User> {
   @Field()
   @MaxLength(30)
   username: string;
@@ -13,7 +14,7 @@ export class UserCreateInput {
 }
 
 @InputType()
-export class UserUpdateInput {
+export class UserUpdateInput implements Partial<User> {
   @Field(type => String, { nullable: true })
   @MaxLength(30)
   username: string;
