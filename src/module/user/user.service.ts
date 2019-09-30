@@ -20,7 +20,7 @@ export class UserService {
   }
 
   async findOneByUsername(username: string): Promise<User> {
-    return await this.userRepository.findOne(username);
+    return await this.userRepository.findOne({ username });
   }
 
   async create(payload: UserCreateInput): Promise<User> {
